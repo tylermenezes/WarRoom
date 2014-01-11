@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <title>
+        {% if block('title') %}
+            {{ block('title') }} &raquo;
+        {% endif %}
+        WarRoom
+    </title>
+    <link type="text/css" rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>WarRoom</h1>
+        <nav>
+            <ul>
+                {% if me %}
+                    <li><a href="/campaigns">Campaigns</a></li>
+                    <li><a href="/users/me">Me</a></li>
+                {% else %}
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <section class="content">
+        {{ block('content') }}
+    </section>
+</body>
+</html>

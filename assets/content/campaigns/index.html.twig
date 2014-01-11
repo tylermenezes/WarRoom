@@ -1,0 +1,13 @@
+{% extends "template.html.twig" %}
+{% block title %}Campaigns{% endblock %}
+{% block content %}
+    <h1>Campaigns</h1>
+    <ul>
+        {% for campaign in campaigns %}
+            <li>
+                <a href="/campaigns/view/{{ campaign.id }}">{{ campaign.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/campaigns/new">Create New</a>
+{% endblock %}

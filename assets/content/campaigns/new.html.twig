@@ -1,0 +1,11 @@
+{% extends "template.html.twig" %}
+{% block title %}Campaigns{% endblock %}
+{% block content %}
+    <h1>Create a New Campaign</h1>
+    <form method="post">
+        <input type="text" name="link" placeholder="Link" />
+        {#<input type="datetime-local" name="starts_at" placeholder="Starts At" />
+        <input type="datetime-local" name="ends_at" placeholder="Ends At" />#}
+        <input type="submit" value="Create" />
+    </form>
+{% endblock %}
