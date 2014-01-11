@@ -53,7 +53,7 @@ class Campaign extends \TinyDb\Orm
     {
         $collapsed = '';
         foreach ($tags as $tag=>$content) {
-            $collapsed .= '<meta '.$attr.'="'.$prefix.':'.$tag.'" content="'.str_replace('"', '', $content).'" />'."\n";
+            $collapsed .= '<meta '.$attr.'="'.$tag.'" content="'.str_replace('"', '', $content).'" />'."\n";
         }
 
         return $collapsed;
