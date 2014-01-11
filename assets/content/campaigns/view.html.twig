@@ -20,8 +20,9 @@
     </ul>
 
     <h2>Create a Link</h2>
+    <p>You can create one or more links to attribute your clicks. Use tags to figure out which postings are performing best.</p>
     <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
-        <input type="text" required name="source_info" placeholder="Source Info (e.g. HSHackers, SRND, etc)" />
+        <input type="text" required name="source_info" placeholder="Source tag (e.g. fb, twitter, email)" />
         <input type="submit" value="Create Link" />
     </form>
 
