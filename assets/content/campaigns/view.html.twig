@@ -27,7 +27,7 @@
 
     {% if autorefresh %}
         <script type="text/javascript">
-            window.setTimeout(function(){location.reload();}, 5000);
+            window.setInterval(function(){location.reload();}, 3000);
         </script>
     {% endif %}
 {% endblock %}
