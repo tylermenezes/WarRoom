@@ -23,10 +23,11 @@ class l
             throw new \CuteControllers\HttpError(401);
         }
 
-
-        new Models\Click([
-            'linkID' => $linkID
-        ]);
+        if (!Models\User::is_logged_in()) {
+            new Models\Click([
+                'linkID' => $linkID
+            ]);
+        }
 
         $campaign = Models\Campaign::one($link->campaignID);
         $user = Models\User::one($link->userID);

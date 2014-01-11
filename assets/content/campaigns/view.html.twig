@@ -21,9 +21,10 @@
 
     <h2>Create a Link</h2>
     <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
-        <input type="text" name="source_info" placeholder="Source Info (e.g. HSHackers, SRND, etc)" />
+        <input type="text" required name="source_info" placeholder="Source Info (e.g. HSHackers, SRND, etc)" />
         <input type="submit" value="Create Link" />
     </form>
+
     {% if autorefresh %}
         <script type="text/javascript">
             window.setTimeout(function(){location.reload();}, 5000);
