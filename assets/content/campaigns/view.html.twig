@@ -15,7 +15,7 @@
     <ul>
         {% for link in my_links %}
             <li><a href="/l/{{ link.id }}">Link</a>
-                - {{ link.source_info }}</li>
+                - {{ link.source_info }} - {{ link.clicks }}</li>
         {% endfor %}
     </ul>
 

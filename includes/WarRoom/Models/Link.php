@@ -26,4 +26,9 @@ class Link extends \TinyDb\Orm
     public $userID;
     public $created_at;
     public $source_info;
+
+    public function get_clicks()
+    {
+        return count(Click::find()->where('linkID = ?', $this->id)->all());
+    }
 } 
