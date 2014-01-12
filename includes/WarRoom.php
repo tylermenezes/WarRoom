@@ -7,7 +7,7 @@ class WarRoom extends \Jetpack\App {
     {
         if (!is_cli()) {
             if (!isset(static::$config->domain)) {
-                static::$config->domain = implode('.', array_slice(explode('.', \CuteControllers\Request::current()->host), -2));
+                static::$config->domain = \CuteControllers\Request::current()->host;
             }
             static::$twig->addGlobal('domain', static::$config->domain);
 
