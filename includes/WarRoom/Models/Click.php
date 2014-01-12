@@ -20,5 +20,8 @@ class Click extends \TinyDb\Orm
      */
     public $linkID;
 
+    public $user_agent;
+    public $ip;
+
     public $created_at;
 } 

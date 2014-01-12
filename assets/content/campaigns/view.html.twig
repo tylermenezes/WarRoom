@@ -2,29 +2,48 @@
 {% block title %}Campaigns{% endblock %}
 {% block content %}
     <h1>Campaign: {{ campaign.title }}</h1>
-    <h2>Leaderboard</h2>
-    <ol>
-        {% for user in users %}
-            <li>
-                {{ user.first_name }} - {{ user.get_clicks(campaign) }}
-            </li>
-        {% endfor %}
-    </ol>
 
-    <h2>My Links</h2>
-    <ul>
-        {% for link in my_links %}
-            <li><a href="/l/{{ link.id }}">Link</a>
-                - {{ link.source_info }} - {{ link.clicks }}</li>
-        {% endfor %}
-    </ul>
+    <section class="leaderboard">
+        <h2>Leaderboard</h2>
+        <ol>
+            {% for user in users %}
+                <li>
+                    {{ user.first_name }} - {{ user.get_clicks(campaign) }}
+                </li>
+            {% endfor %}
+        </ol>
+    </section>
 
-    <h2>Create a Link</h2>
-    <p>You can create one or more links to attribute your clicks. Use tags to figure out which postings are performing best.</p>
-    <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
-        <input type="text" required name="source_info" placeholder="Source tag (e.g. fb, twitter, email)" />
-        <input type="submit" value="Create Link" />
-    </form>
+    <section class="mylinks">
+        <h2>My Links</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Clicks</th>
+                    <th>Tag</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in my_links %}
+                    <tr>
+                        <td class="clicks">{{ link.clicks }}</td>
+                        <td class="tag">{{ link.source_info }}</td>
+                        <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>(new)</td>
+                    <td colspan="2">
+                        <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
+                            <input type="text" required name="source_info" placeholder="tag" />
+                            <input type="submit" value="Create" />
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
     {% if autorefresh %}
         <script type="text/javascript">

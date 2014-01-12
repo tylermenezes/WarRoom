@@ -6,6 +6,11 @@ class WarRoom extends \Jetpack\App {
     public static function after()
     {
         if (!is_cli()) {
+            if (!isset(static::$config->domain)) {
+                static::$config->domain = implode('.', array_slice(explode('.', \CuteControllers\Request::current()->host), -2));
+            }
+            static::$twig->addGlobal('domain', static::$config->domain);
+
             // User Login Check
             if (\WarRoom\Models\User::is_logged_in()) {
                 static::$twig->addGlobal('me', \WarRoom\Models\User::me());

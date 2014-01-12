@@ -2,10 +2,17 @@
 <html>
 <head>
     {{ campaign.tags|raw }}
-    <script type="text/javascript">
-        window.location = '{{ redir_link|raw }}';
-    </script>
 </head>
 <body>
+    <img id="track" src="/l/count/{{ link.id }}" style="width: 1px; height: 1px;" />
+    <script type="text/javascript">
+        var track = document.getElementById('track');
+        var redir = function() {
+            window.location = '{{ redir_link|raw }}'
+        };
+        track.onload = redir;
+        track.onerror = redir;
+        setTimeout(function(){redir();}, 1000);
+    </script>
 </body>
 </html>

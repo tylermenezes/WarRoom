@@ -23,16 +23,22 @@ class l
             throw new \CuteControllers\HttpError(401);
         }
 
-        if (!Models\User::is_logged_in()) {
-            new Models\Click([
-                'linkID' => $linkID
-            ]);
-        }
-
         $campaign = Models\Campaign::one($link->campaignID);
         $user = Models\User::one($link->userID);
         $redir_link = $campaign->link.'?utm_source=warroom&utm_medium='.$user->first_name.$user->last_name.'&utm_term='.$link->source_info;
 
-        echo \WarRoom::$twig->render('l.html.twig', ['campaign' => $campaign, 'redir_link' => $redir_link]);
+        echo \WarRoom::$twig->render('l.html.twig', ['link' => $link, 'campaign' => $campaign, 'redir_link' => $redir_link]);
+    }
+
+    public function get_count($linkID)
+    {
+        header("Content-type: image/png");
+        if (!Models\User::is_logged_in()) {
+            new Models\Click([
+                'linkID' => $linkID,
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                'ip' => $this->request->user_ip
+            ]);
+        }
     }
 }
