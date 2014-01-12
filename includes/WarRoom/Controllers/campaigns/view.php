@@ -30,7 +30,7 @@ class view
                         ->where('campaignID = ?', $id)
                         ->all();
 
-        $autorefresh = $this->request->get('autorefresh') == 1;
+        $autorefresh = $this->request->get('autorefresh') !== null;
 
         echo \WarRoom::$twig->render('campaigns/view.html.twig', ['autorefresh' => $autorefresh, 'campaign' => $campaign, 'my_links' => $my_links, 'users' => Models\User::get_leaders($campaign)]);
     }
