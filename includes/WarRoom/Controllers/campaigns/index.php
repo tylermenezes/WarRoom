@@ -19,6 +19,10 @@ class index
 
     public function get_index()
     {
-        echo \WarRoom::$twig->render('campaigns/index.html.twig', ['campaigns' => Models\Campaign::find()->all()]);
+        $open_campaigns = Models\Campaign::find()
+            ->where('starts_at IS NULL OR starts_at < NOW()')
+            ->where('ends_at IS NULL OR ends_at > NOW()')
+            ->all();
+        echo \WarRoom::$twig->render('campaigns/index.html.twig', ['campaigns' => $open_campaigns]);
     }
 } 
