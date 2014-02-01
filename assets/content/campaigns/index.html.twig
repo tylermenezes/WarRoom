@@ -1,23 +1,27 @@
 {% extends "template.html.twig" %}
 {% block title %}Campaigns{% endblock %}
 {% block content %}
-    <h1>My Running Campaigns</h1>
-    <ul>
-        {% for campaign in my_campaigns %}
-            <li>
-                <a href="/campaigns/view/{{ campaign.id }}">{{ campaign.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if my_campaign|length > 0 %}
+        <h1>My Running Campaigns</h1>
+        <ul>
+            {% for campaign in my_campaigns %}
+                <li>
+                    <a href="/campaigns/view/{{ campaign.id }}">{{ campaign.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-    <h1>Other Running Campaigns</h1>
-    <ul>
-        {% for campaign in other_campaigns %}
-            <li>
-                <a href="/campaigns/view/{{ campaign.id }}">{{ campaign.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if other_campaigns|length > 0 %}
+        <h1>Other Running Campaigns</h1>
+        <ul>
+            {% for campaign in other_campaigns %}
+                <li>
+                    <a href="/campaigns/view/{{ campaign.id }}">{{ campaign.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <a href="/campaigns/new" class="new">Create New</a>
 {% endblock %}

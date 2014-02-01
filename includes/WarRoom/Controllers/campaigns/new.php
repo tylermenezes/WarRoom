@@ -29,6 +29,8 @@ class newc
         ]);
         $campaign->sync_og();
 
+        Models\User::me()->join($campaign);
+
         $this->redirect('/campaigns/view/'.$campaign->id);
     }
 } 
