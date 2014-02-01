@@ -61,3 +61,5 @@ section.content {
   section.content .campaign {
     width: 35%;
     float: left; }
+  section.content .campaign.display {
+    width: 100%; }

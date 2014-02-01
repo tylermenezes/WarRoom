@@ -31,8 +31,13 @@ class view
                         ->all();
 
         $sound = $this->request->get('sound') !== null;
+        $display = $this->request->get('display') !== null;
 
-        echo \WarRoom::$twig->render('campaigns/view.html.twig', ['sound' => $sound, 'campaign' => $campaign, 'my_links' => $my_links, 'users' => Models\User::get_leaders($campaign)]);
+        if ($display) {
+            $sound = true;
+        }
+
+        echo \WarRoom::$twig->render('campaigns/view.html.twig', ['sound' => $sound, 'display' => $display, 'campaign' => $campaign, 'my_links' => $my_links, 'users' => Models\User::get_leaders($campaign)]);
     }
 
     public function get_liveleaders($id)
