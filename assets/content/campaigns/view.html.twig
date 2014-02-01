@@ -5,7 +5,7 @@
 
     <section class="leaderboard">
         <h2>Leaderboard</h2>
-        <ol>
+        <ol id="leaders">
             {% for user in users %}
                 <li>
                     {{ user.first_name }} - {{ user.get_clicks(campaign) }}
@@ -14,7 +14,7 @@
         </ol>
     </section>
 
-    <section class="mylinks">
+    <section class="mylinks" id="mylinks">
         <h2>My Links</h2>
         <table>
             <thead>
@@ -26,13 +26,13 @@
             </thead>
             <tbody>
                 {% for link in my_links %}
-                    <tr>
+                    <tr id="link-id-{{ link.id }}">
                         <td class="clicks">{{ link.clicks }}</td>
                         <td class="tag">{{ link.source_info }}</td>
                         <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
                     </tr>
                 {% endfor %}
-                <tr>
+                <tr class="new">
                     <td>(new)</td>
                     <td colspan="2">
                         <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
@@ -44,10 +44,81 @@
             </tbody>
         </table>
     </section>
+{% endblock %}
+{% block javascript %}
+    <script type="application/javascript">
+        $('body').ready(function(){
 
-    {% if autorefresh %}
-        <script type="text/javascript">
-            window.setInterval(function(){location.reload();}, 3000);
-        </script>
-    {% endif %}
+            var arraysEqual = function(a, b)
+            {
+                if (a === b) return true;
+                if (a == null || b == null) return false;
+                if (a.length != b.length) return false;
+
+                for (var i = 0; i < a.length; ++i) {
+                    if (a[i] !== b[i]) return false;
+                }
+                return true;
+            }
+
+            var playSound = function(name)
+            {
+                {% if sound %}
+                    var sound_obj = $('#sound-'+name);
+                    if ($('#sound-'+name).length < 1) {
+                        sound_obj = $('<audio id="sound-'+name+'" src="/assets/mp3/'+name+'.mp3" />');
+                        $("body").append(sound_obj);
+                    }
+                    console.log(sound_obj);
+                    sound_obj.get(0).play();
+                {% endif %}
+            }
+
+            var previous_leaders_ids = null;
+            var previous_clicks_count = null;
+
+            var setLeaders = function(new_leaders)
+            {
+                var elem = $("#leaders").empty();
+                new_leaders.sort(function(a,b){
+                    return b.clicks - a.clicks;
+                });
+
+                for(var i in new_leaders) {
+                    var new_li = $('<li></li>');
+                    new_li.text(new_leaders[i].first_name + ' - ' + new_leaders[i].clicks);
+                    elem.append(new_li);
+                }
+
+                // Check if the leaderboard was updated
+                new_leaders_ids = new_leaders.map(function(user){ return user.id });
+                if (!arraysEqual(new_leaders_ids, previous_leaders_ids) && previous_leaders_ids !== null) {
+                    playSound("overtake");
+                }
+                previous_leaders_ids = new_leaders_ids;
+
+                // Check if there have been clicks
+                new_clicks_count = new_leaders.reduce(function(a,b){return a + b.clicks}, 0);
+                if (new_clicks_count > previous_clicks_count && previous_clicks_count != null) {
+                    playSound("click");
+                }
+                previous_clicks_count = new_clicks_count;
+
+            }
+
+            var setMine = function(new_links)
+            {
+                for (var i in new_links) {
+                    $('#link-id-'+new_links[i].id+' .clicks').text(new_links[i].clicks);
+                }
+            }
+
+            setInterval(function(){
+                $.get('/campaigns/view/liveleaders/{{ campaign.id }}.json', function(data) {
+                    setLeaders(data.leaderboard);
+                    setMine(data.links);
+                });
+            }, 1000);
+        });
+    </script>
 {% endblock %}
