@@ -1,7 +1,7 @@
 {% extends "template.html.twig" %}
 {% block title %}Campaigns{% endblock %}
 {% block content %}
-    {% if my_campaign|length > 0 %}
+    {% if my_campaigns|length > 0 %}
         <h1>My Running Campaigns</h1>
         <ul>
             {% for campaign in my_campaigns %}
