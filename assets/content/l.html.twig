@@ -8,7 +8,7 @@
     <script type="text/javascript">
         var track = document.getElementById('track');
         var redir = function() {
-            window.location = '{{ redir_link|raw }}'
+            window.location = '{{ redir_link|raw|escape('js') }}'
         };
         track.onload = redir;
         track.onerror = redir;
