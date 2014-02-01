@@ -1,8 +1,8 @@
 {% extends "template.html.twig" %}
 {% block title %}Campaigns{% endblock %}
 {% block content %}
-    <section class="mine">
-        {% if not display %}
+    {% if not display %}
+        <section class="mine">
             <h2>Campaign: {{ campaign.title }}</h2>
             {% if not me.is_member(campaign) %}
                 <section class="join">
