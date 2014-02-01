@@ -16,7 +16,6 @@
             <ul>
                 {% if me %}
                     <li><a href="/campaigns">Campaigns</a></li>
-                    <li><a href="/users/me">Me</a></li>
                 {% else %}
                     <li><a href="/login">Login</a></li>
                 {% endif %}
@@ -28,5 +27,7 @@
     </section>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     {{ block('javascript') }}
+    <script type="text/javascript" src="//use.typekit.net/vvn8tfj.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </body>
 </html>

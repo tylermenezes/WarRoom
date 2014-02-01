@@ -1,63 +1,66 @@
 {% extends "template.html.twig" %}
 {% block title %}Campaigns{% endblock %}
 {% block content %}
-    <h1>Campaign: {{ campaign.title }}</h1>
+    <section class="mine">
+        <h2>Campaign: {{ campaign.title }}</h2>
+        {% if not me.is_member(campaign) %}
+            <section class="join">
+                <form method="post" action="/campaigns/view/join/{{ campaign.id }}">
+                    <input type="submit" value="Join this Campaign!" />
+                </form>
+            </section>
+        {% endif %}
 
-    {% if not me.is_member(campaign) %}
-        <section class="join">
-            <form method="post" action="/campaigns/view/join/{{ campaign.id }}">
-                <input type="submit" value="Join this Campaign!" />
-            </form>
-        </section>
-    {% endif %}
-
-    <section class="leaderboard">
-        <h2>Leaderboard</h2>
-        <ol id="leaders">
-            {% for user in users %}
-                <li>
-                    {{ user.first_name }} - {{ user.get_clicks(campaign) }}
-                </li>
-            {% endfor %}
-        </ol>
-    </section>
-
-    {% if me.is_member(campaign) %}
-        <section class="mylinks" id="mylinks">
-            <h2>My Links</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Clicks</th>
-                        <th>Tag</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for link in my_links %}
-                        <tr id="link-id-{{ link.id }}">
-                            <td class="clicks">{{ link.clicks }}</td>
-                            <td class="tag">{{ link.source_info }}</td>
-                            <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
+        {% if me.is_member(campaign) %}
+            <section class="mylinks" id="mylinks">
+                <h2>My Links</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Clicks</th>
+                            <th>Tag</th>
+                            <th>Link</th>
                         </tr>
-                    {% endfor %}
-                    <tr class="new">
-                        <td>(new)</td>
-                        <td colspan="2">
-                            <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
-                                <input type="text" required name="source_info" placeholder="tag" />
-                                <input type="submit" value="Create" />
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    {% endif %}
-
-    <section class="toggle_sounds">
-        <a href="#"></a>
+                    </thead>
+                    <tbody>
+                        {% for link in my_links %}
+                            <tr id="link-id-{{ link.id }}">
+                                <td class="clicks">{{ link.clicks }}</td>
+                                <td class="tag">{{ link.source_info }}</td>
+                                <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="new">
+                            <td>(new)</td>
+                            <td colspan="2">
+                                <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
+                                    <input type="text" required name="source_info" placeholder="tag" />
+                                    <input type="submit" value="Create" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        {% endif %}
     </section>
+
+    <section class="campaign">
+        <section class="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol id="leaders">
+                {% for user in users %}
+                    <li>
+                        {{ user.first_name }} - {{ user.get_clicks(campaign) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </section>
+        <section class="toggle_sounds">
+            <a href="#"></a>
+        </section>
+    </section>
+
 {% endblock %}
 {% block javascript %}
     <script type="application/javascript">

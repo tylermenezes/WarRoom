@@ -1,3 +1,90 @@
-header {
+$width: 1000px;
+$font: "inconsolata", monospace;
+$font_header: "proxima-nova", sans-serif;
 
+header {
+    width: 100%;
+    max-width: $width;
+    margin: 0 auto;
+
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+        width: 0;
+    }
+
+    h1 {
+        float: left;
+        font-family: $font_header;
+        text-transform: uppercase;
+    }
+
+    nav {
+        float: right;
+
+        ul {
+            padding: 0;
+            li {
+                list-style-type: none;
+                display: inline-block;
+                font-family: $font_header;
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+section.content {
+    width: 100%;
+    max-width: $width;
+    margin: 0 auto;
+    font-family: $font;
+
+    h1, h2, h3 {
+        font-family: $font_header;
+        text-transform: uppercase;
+    }
+
+    a.new, .toggle_sounds a, .join input[type="submit"] {
+        -webkit-border-top-left-radius: 3px;
+        -webkit-border-top-right-radius: 3px;
+        -webkit-border-bottom-left-radius: 3px;
+        -webkit-border-bottom-right-radius: 3px;
+        -moz-border-radius-topleft: 3px;
+        -moz-border-radius-topright: 3px;
+        -moz-border-radius-bottomleft: 3px;
+        -moz-border-radius-bottomright: 3px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border: 3px solid #000;
+        background: #fff;
+        color: #000;
+
+        padding: 0.4rem 1.5rem;
+        text-decoration: none;
+        display: inline-block;
+
+        font-family: $font;
+        font-size: 1rem;
+
+        &:hover {
+            color: #fff;
+            background: #000;
+        }
+    }
+
+    .mine {
+        width: 60%;
+        margin-right: 5%;
+        float: left;
+    }
+
+    .campaign {
+        width: 35%;
+        float: left;
+    }
 }
