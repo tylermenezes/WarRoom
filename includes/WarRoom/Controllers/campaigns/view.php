@@ -80,12 +80,28 @@ class view
             throw new \CuteControllers\HttpError(401);
         }
 
+        if (!Models\User::me()->is_member($campaign)) {
+            throw new \CuteControllers\HttpError(401);
+        }
+
         new Models\Link([
             'userID' => Models\User::me()->id,
             'campaignID' => $id,
             'source_info' => $this->request->post('source_info')
         ]);
 
+        $this->redirect('/campaigns/view/'.$id);
+    }
+
+    public function post_join($id)
+    {
+        try {
+            $campaign = Models\Campaign::one($id);
+        } catch (\TinyDb\NoRecordException $ex) {
+            throw new \CuteControllers\HttpError(401);
+        }
+
+        Models\User::me()->join($campaign);
         $this->redirect('/campaigns/view/'.$id);
     }
 } 

@@ -19,10 +19,18 @@ class index
 
     public function get_index()
     {
-        $open_campaigns = Models\Campaign::find()
-            ->where('starts_at IS NULL OR starts_at < NOW()')
-            ->where('ends_at IS NULL OR ends_at > NOW()')
+        $my_campaigns = Models\Campaign::find()
+            ->where('campaigns.starts_at IS NULL OR campaigns.starts_at < NOW()')
+            ->where('campaigns.ends_at IS NULL OR campaigns.ends_at > NOW()')
+            ->join('campaigns_users ON (campaigns.campaignID = campaigns_users.campaignID)')
+            ->where('campaigns_users.userID = ?', Models\User::me()->id)
             ->all();
-        echo \WarRoom::$twig->render('campaigns/index.html.twig', ['campaigns' => $open_campaigns]);
+
+        $other_campaigns = Models\Campaign::find()
+            ->where('campaigns.starts_at IS NULL OR campaigns.starts_at < NOW()')
+            ->where('campaigns.ends_at IS NULL OR campaigns.ends_at > NOW()')
+            ->where('(SELECT COUNT(*) FROM campaigns_users WHERE campaigns_users.campaignID = campaigns.campaignID AND campaigns_users.userID = ?) = 0', Models\User::me()->id)
+            ->all();
+        echo \WarRoom::$twig->render('campaigns/index.html.twig', ['my_campaigns' => $my_campaigns, 'other_campaigns' => $other_campaigns]);
     }
 } 

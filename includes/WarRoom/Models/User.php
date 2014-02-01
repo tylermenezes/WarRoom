@@ -30,10 +30,30 @@ class User extends \TinyDb\Orm
                         ->all());
     }
 
+    public function join($campaign)
+    {
+        if (!$this->is_member($campaign)) {
+            new \WarRoom\Models\Campaign\User([
+                'userID' => $this->id,
+                'campaignID' => $campaign->id
+            ]);
+        }
+    }
+
+    public function is_member($campaign)
+    {
+        return count(\WarRoom\Models\Campaign\User::find()
+                    ->where('userID = ?', $this->userID)
+                    ->where('campaignID = ?', $campaign->id)
+                    ->all()) > 0;
+    }
+
     public static function get_leaders($campaign)
     {
         return self::find()
                     ->select('users.*, (SELECT COUNT(*) FROM clicks LEFT JOIN links ON (links.linkID = clicks.linkID) WHERE (links.campaignID = '.$campaign->id.' AND links.userID = users.userID)) as clicks')
+                    ->join('campaigns_users ON (campaigns_users.userID = users.userID)')
+                    ->where('campaigns_users.campaignID = ?', $campaign->id)
                     ->order_by('clicks DESC')
                     ->all();
     }

@@ -3,6 +3,14 @@
 {% block content %}
     <h1>Campaign: {{ campaign.title }}</h1>
 
+    {% if not me.is_member(campaign) %}
+        <section class="join">
+            <form method="post" action="/campaigns/view/join/{{ campaign.id }}">
+                <input type="submit" value="Join this Campaign!" />
+            </form>
+        </section>
+    {% endif %}
+
     <section class="leaderboard">
         <h2>Leaderboard</h2>
         <ol id="leaders">
@@ -14,36 +22,38 @@
         </ol>
     </section>
 
-    <section class="mylinks" id="mylinks">
-        <h2>My Links</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Clicks</th>
-                    <th>Tag</th>
-                    <th>Link</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for link in my_links %}
-                    <tr id="link-id-{{ link.id }}">
-                        <td class="clicks">{{ link.clicks }}</td>
-                        <td class="tag">{{ link.source_info }}</td>
-                        <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
+    {% if me.is_member(campaign) %}
+        <section class="mylinks" id="mylinks">
+            <h2>My Links</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clicks</th>
+                        <th>Tag</th>
+                        <th>Link</th>
                     </tr>
-                {% endfor %}
-                <tr class="new">
-                    <td>(new)</td>
-                    <td colspan="2">
-                        <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
-                            <input type="text" required name="source_info" placeholder="tag" />
-                            <input type="submit" value="Create" />
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+                </thead>
+                <tbody>
+                    {% for link in my_links %}
+                        <tr id="link-id-{{ link.id }}">
+                            <td class="clicks">{{ link.clicks }}</td>
+                            <td class="tag">{{ link.source_info }}</td>
+                            <td class="link"><input type="text" readonly value="http://{{ domain }}/l/{{ link.id }}" /></td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="new">
+                        <td>(new)</td>
+                        <td colspan="2">
+                            <form method="post" action="/campaigns/view/link/{{ campaign.id }}">
+                                <input type="text" required name="source_info" placeholder="tag" />
+                                <input type="submit" value="Create" />
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
 {% endblock %}
 {% block javascript %}
     <script type="application/javascript">
@@ -92,9 +102,17 @@
 
                 // Check if the leaderboard was updated
                 new_leaders_ids = new_leaders.map(function(user){ return user.id });
-                if (!arraysEqual(new_leaders_ids, previous_leaders_ids) && previous_leaders_ids !== null) {
-                    playSound("overtake");
+                if (previous_leaders_ids !== null
+                    && !arraysEqual(new_leaders_ids, previous_leaders_ids)
+                    && new_leaders_ids.length === previous_leaders_ids.length) {
+                    playSound("overtake"+Math.round((Math.random()*5)+1));
                 }
+
+                if (previous_leaders_ids !== null
+                    && new_leaders_ids.length !== previous_leaders_ids.length) {
+                    playSound("joined");
+                }
+
                 previous_leaders_ids = new_leaders_ids;
 
                 // Check if there have been clicks
@@ -118,7 +136,7 @@
                     setLeaders(data.leaderboard);
                     setMine(data.links);
                 });
-            }, 1000);
+            }, 2500);
         });
     </script>
 {% endblock %}
