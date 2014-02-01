@@ -15,6 +15,13 @@ class login
 {
     use \CuteControllers\Controller;
 
+    public function before_is_logged_in()
+    {
+        if (Models\User::is_logged_in()) {
+            $this->redirect('/campaigns');
+        }
+    }
+
     public function get_index()
     {
         echo \WarRoom::$twig->render('login.html.twig');
