@@ -106,6 +106,10 @@ class view
             throw new \CuteControllers\HttpError(401);
         }
 
+        if (!Models\User::me()->in_bailiwick) {
+            throw new \CuteControllers\HttpError(403);
+        }
+
         Models\User::me()->join($campaign);
         $this->redirect('/campaigns/view/'.$id);
     }

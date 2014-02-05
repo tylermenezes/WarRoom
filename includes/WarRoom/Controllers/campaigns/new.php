@@ -16,6 +16,7 @@ class newc
 {
     use \CuteControllers\Controller;
     use Traits\RequiresLogin;
+    use Traits\RequiresAdmin;
 
     public function get_index()
     {

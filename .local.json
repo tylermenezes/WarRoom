@@ -1,4 +1,4 @@
 {
-    "domain": "studentrnd.org",
+    "email_domain": "studentrnd.org",
     "db": "mysql://warroom:warroom@localhost/war_room"
 }

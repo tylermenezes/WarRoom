@@ -1,0 +1,14 @@
+{% extends "template.html.twig" %}
+{% block title %}Invite{% endblock %}
+{% block content %}
+    <form method="post" class="crud">
+        <h1>Ask a friend to join you in promoting {{ campaign.title }}!</h1>
+        <p>When they enlist, you'll get credit for their clicks, as well as credit for clicks from anyone
+            <em>they</em> invite, and so on.</p>
+        <p>It's like a pyramid scheme!</p>
+        <input type="text" name="first_name" placeholder="First Name" required />
+        <input type="text" name="last_name" placeholder="Last Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="submit" value="Forward!" />
+    </form>
+{% endblock %}

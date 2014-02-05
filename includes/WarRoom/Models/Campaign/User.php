@@ -16,4 +16,9 @@ class User extends \TinyDb\Orm
     public $campaignID;
     public $userID;
     public $created_at;
+
+    /**
+     * @foreign \WarRoom\Models\User invited_by
+     */
+    public $invited_by_userID;
 } 

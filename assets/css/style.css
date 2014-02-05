@@ -19,18 +19,59 @@ header {
       header nav ul li {
         list-style-type: none;
         display: inline-block;
-        font-family: "proxima-nova", sans-serif;
+        font-family: "inconsolata", monospace;
         text-transform: uppercase; }
+        header nav ul li a, header nav ul li a:visited {
+          color: #000; }
 
 section.content {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   font-family: "inconsolata", monospace; }
-  section.content h1, section.content h2, section.content h3 {
+  section.content h1, section.content h2, section.content h3, section.content h4, section.content h5, section.content h6 {
     font-family: "proxima-nova", sans-serif;
     text-transform: uppercase; }
-  section.content a.new, section.content .toggle_sounds a, section.content .join input[type="submit"] {
+  section.content input[type="text"],
+  section.content input[type="email"],
+  section.content input[type="url"],
+  section.content input[type="datetime"],
+  section.content input[type="datetime-local"],
+  section.content input[type="password"],
+  section.content input[type="search"],
+  section.content input[type="number"] {
+    font-family: "inconsolata", monospace;
+    font-size: 1rem;
+    padding: 0.3rem 0.2rem;
+    border: 2px solid #000; }
+  section.content form.crud {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto; }
+    section.content form.crud h1 {
+      text-align: center; }
+    section.content form.crud input[type="text"],
+    section.content form.crud input[type="email"],
+    section.content form.crud input[type="url"],
+    section.content form.crud input[type="datetime"],
+    section.content form.crud input[type="datetime-local"],
+    section.content form.crud input[type="password"],
+    section.content form.crud input[type="search"],
+    section.content form.crud input[type="number"] {
+      width: 100%; }
+  section.content .mylinks tr:not(.new) td {
+    padding: 0.3rem 0.5rem;
+    text-align: center;
+    white-space: nowrap; }
+    section.content .mylinks tr:not(.new) td:last-child {
+      width: 100%; }
+      section.content .mylinks tr:not(.new) td:last-child input {
+        text-align: center;
+        width: 100%;
+        text-overflow: ellipsis;
+        border: 0;
+        padding: 0; }
+  section.content a.new, section.content .toggle_sounds a, section.content input[type="submit"] {
     -webkit-border-top-left-radius: 3px;
     -webkit-border-top-right-radius: 3px;
     -webkit-border-bottom-left-radius: 3px;
@@ -43,15 +84,15 @@ section.content {
     border-top-right-radius: 3px;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
-    border: 3px solid #000;
+    border: 2px solid #000;
     background: #fff;
     color: #000;
-    padding: 0.4rem 1.5rem;
+    padding: 0.3rem 1rem;
     text-decoration: none;
     display: inline-block;
     font-family: "inconsolata", monospace;
     font-size: 1rem; }
-    section.content a.new:hover, section.content .toggle_sounds a:hover, section.content .join input[type="submit"]:hover {
+    section.content a.new:hover, section.content .toggle_sounds a:hover, section.content input[type="submit"]:hover {
       color: #fff;
       background: #000; }
   section.content .mine {

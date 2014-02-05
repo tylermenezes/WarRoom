@@ -1,5 +1,5 @@
 {% extends "template.html.twig" %}
-{% block title %}Campaigns{% endblock %}
+{% block title %}{{ campaign.title }}{% endblock %}
 {% block content %}
     {% if not display %}
         <section class="mine">
@@ -100,7 +100,13 @@
                     event.stopPropagation();
                     set_sounds(!sounds_enabled());
                     $(this).text((sounds_enabled() ? 'Disable' : 'Enable')+' sounds');
+                    return false;
                 });
+
+
+            $(".mylinks tr:not(.new) input[type='text']").on("click", function () {
+                $(this).select();
+            });
 
             var arraysEqual = function(a, b)
             {
@@ -162,8 +168,8 @@
                 if (new_clicks_count > previous_clicks_count && previous_clicks_count != null) {
                     playSound("click");
                 }
-                previous_clicks_count = new_clicks_count;
 
+                previous_clicks_count = new_clicks_count;
             }
 
             var setMine = function(new_links)
@@ -178,7 +184,7 @@
                     setLeaders(data.leaderboard);
                     setMine(data.links);
                 });
-            }, 2500);
+            }, 1000);
         });
     </script>
 {% endblock %}

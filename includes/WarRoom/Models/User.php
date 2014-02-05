@@ -17,9 +17,16 @@ class User extends \TinyDb\Orm
 
     public $userID;
     public $email;
+    public $is_admin;
 
     public $first_name;
     public $last_name;
+
+    public function get_in_bailiwick()
+    {
+        $domain = array_pop(explode('@', $this->email));
+        return $domain === \WarRoom::$config->email_domain;
+    }
 
     public function get_clicks($campaign)
     {

@@ -31,6 +31,20 @@ class index
             ->where('campaigns.ends_at IS NULL OR campaigns.ends_at > NOW()')
             ->where('(SELECT COUNT(*) FROM campaigns_users WHERE campaigns_users.campaignID = campaigns.campaignID AND campaigns_users.userID = ?) = 0', Models\User::me()->id)
             ->all();
-        echo \WarRoom::$twig->render('campaigns/index.html.twig', ['my_campaigns' => $my_campaigns, 'other_campaigns' => $other_campaigns]);
+
+        $archived_campaigns = Models\Campaign::find()
+            ->where('campaigns.ends_at < NOW()')
+            ->all();
+
+        $upcoming_campaigns = Models\Campaign::find()
+            ->where('campaigns.starts_at > NOW()')
+            ->all();
+
+        echo \WarRoom::$twig->render('campaigns/index.html.twig', [
+            'my_campaigns' => $my_campaigns,
+            'other_campaigns' => $other_campaigns,
+            'upcoming_campaigns' => $upcoming_campaigns,
+            'archived_campaigns' => $archived_campaigns
+        ]);
     }
 } 
