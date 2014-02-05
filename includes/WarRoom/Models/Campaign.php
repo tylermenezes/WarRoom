@@ -73,6 +73,10 @@ class Campaign extends \TinyDb\Orm
             $rmetas[$property] = $content;
         }
 
+        if (isset($rmetas['url'])) {
+            unset($rmetas['url']);
+        }
+
         return $rmetas;
     }
 
