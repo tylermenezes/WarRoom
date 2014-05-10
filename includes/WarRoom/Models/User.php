@@ -28,39 +28,39 @@ class User extends \TinyDb\Orm
         return $domain === \WarRoom::$config->email_domain;
     }
 
-    public function get_clicks($campaign)
+    public function get_clicks($group)
     {
         return count(Click::find()
                         ->join('links ON (links.linkID = clicks.linkID)')
                         ->where('links.userID = ?', $this->id)
-                        ->where('links.campaignID = ?', $campaign->id)
+                        ->where('links.groupID = ?', $group->id)
                         ->all());
     }
 
-    public function join($campaign)
+    public function join($group)
     {
-        if (!$this->is_member($campaign)) {
-            new \WarRoom\Models\Campaign\User([
+        if (!$this->is_member($group)) {
+            new \WarRoom\Models\Group\User([
                 'userID' => $this->id,
-                'campaignID' => $campaign->id
+                'groupID' => $group->id
             ]);
         }
     }
 
-    public function is_member($campaign)
+    public function is_member($group)
     {
-        return count(\WarRoom\Models\Campaign\User::find()
+        return count(\WarRoom\Models\Group\User::find()
                     ->where('userID = ?', $this->userID)
-                    ->where('campaignID = ?', $campaign->id)
+                    ->where('groupID = ?', $group->id)
                     ->all()) > 0;
     }
 
-    public static function get_leaders($campaign)
+    public static function get_leaders($group)
     {
         return self::find()
-                    ->select('users.*, (SELECT COUNT(*) FROM clicks LEFT JOIN links ON (links.linkID = clicks.linkID) WHERE (links.campaignID = '.$campaign->id.' AND links.userID = users.userID)) as clicks')
-                    ->join('campaigns_users ON (campaigns_users.userID = users.userID)')
-                    ->where('campaigns_users.campaignID = ?', $campaign->id)
+                    ->select('users.*, (SELECT COUNT(*) FROM clicks LEFT JOIN links ON (links.linkID = clicks.linkID) WHERE (links.groupID = '.$group->id.' AND links.userID = users.userID)) as clicks')
+                    ->join('groups_users ON (groups_users.userID = users.userID)')
+                    ->where('groups_users.groupID = ?', $group->id)
                     ->order_by('clicks DESC')
                     ->all();
     }

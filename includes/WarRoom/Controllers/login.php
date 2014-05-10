@@ -15,13 +15,6 @@ class login
 {
     use \CuteControllers\Controller;
 
-    public function before_is_logged_in()
-    {
-        if (Models\User::is_logged_in()) {
-            $this->redirect('/campaigns');
-        }
-    }
-
     public function get_index()
     {
         echo \WarRoom::$twig->render('login.html.twig');
@@ -29,35 +22,39 @@ class login
 
     public function post_index()
     {
-        try {
-            $user = Models\User::find()->where('email = ?', $this->request->post('email'))->one();
+        $oauth_url = "https://www.facebook.com/dialog/oauth?"
+                    ."client_id=".\WarRoom::$config->facebook->public
+                    ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth', true)
+                    ."&scope=email";
+        $this->redirect($oauth_url);
+    }
 
-            /*if (!$user->check_password($this->request->post('password'))) {
-                throw new \TinyDb\NoRecordException();
-            }*/
+    public function get_oauth()
+    {
+        $code = $this->request->get('code');
+        $request_url = "https://graph.facebook.com/oauth/access_token?"
+                       ."client_id=".\WarRoom::$config->facebook->public
+                       ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth', true)
+                       ."&client_secret=".\WarRoom::$config->facebook->secret
+                       ."&code=".$code;
+        $response = [];
+        parse_str(file_get_contents($request_url), $response);
+        $access_token = $response['access_token'];
+
+        $graph_url = "https://graph.facebook.com/me?access_token=".$access_token;
+        $graph = json_decode(file_get_contents($graph_url));
+
+        try {
+            $user = Models\User::find()->where('email = ?', $graph->email)->one();
         } catch (\TinyDb\NoRecordException $ex) {
-            echo \WarRoom::$twig->render('login.html.twig', ['nologin' => true]);
-            exit;
+            $user = new Models\User([
+                'email' => $graph->email,
+                'first_name' => $graph->first_name,
+                'last_name' => $graph->last_name
+            ]);
         }
 
         $user->login();
         $this->redirect('/campaigns');
-    }
-
-    public function get_invite()
-    {
-        $this->check_invite();
-    }
-
-    private function check_invite()
-    {
-        try {
-            Models\Invite::find()
-                ->where('inviteID = ?', $this->request->param('code'))
-                ->where('used_at IS NULL')
-                ->one();
-        } catch (\TinyDb\NoRecordException $ex) {
-            throw new \CuteControllers\HttpError(404);
-        }
     }
 }

@@ -1,0 +1,11 @@
+{% extends "template.html.twig" %}
+{% block title %}Campaigns{% endblock %}
+{% block content %}
+    <h1>Create a New Campaign Group</h1>
+    <form method="post">
+        <input type="text" required name="title" placeholder="Title" />
+        <input type="datetime-local" required name="starts_at" placeholder="Starts At" />
+        <input type="datetime-local" required name="ends_at" placeholder="Ends At" />
+        <input type="submit" value="Create" />
+    </form>
+{% endblock %}

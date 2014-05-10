@@ -20,6 +20,11 @@ class Link extends \TinyDb\Orm
      */
     public $campaignID;
 
+    /**
+     * @foreign \WarRoom\Models\Group groupID
+     */
+    public $groupID;
+
     /*
      * @foreign \WarRoom\Models\User user
      */

@@ -20,6 +20,11 @@ class Campaign extends \TinyDb\Orm
     public $starts_at;
     public $ends_at;
 
+    /**
+     * @foreign \WarRoom\Models\Group group
+     */
+    public $groupID;
+
     public $title;
     public $description;
     public $fb_meta;
@@ -43,8 +48,8 @@ class Campaign extends \TinyDb\Orm
         $general_tags  = '<title>'.htmlentities($this->title).'</title>'."\n";
         $general_tags .= '<meta name="description" content="'.str_replace('"', '', $this->description).'" />'."\n";
 
-        $fb_tags = $this->collapse_meta(json_decode($this->fb_meta), 'og', 'property');
-        $twitter_tags = $this->collapse_meta(json_decode($this->twitter_meta), 'twitter', 'name');
+        $fb_tags = $this->collapse_meta(json_decode($this->fb_meta, true), 'og', 'property');
+        $twitter_tags = $this->collapse_meta(json_decode($this->twitter_meta, true), 'twitter', 'name');
 
         return "$general_tags\n$fb_tags\n$twitter_tags";
     }
@@ -52,8 +57,10 @@ class Campaign extends \TinyDb\Orm
     private function collapse_meta($tags, $prefix, $attr)
     {
         $collapsed = '';
-        foreach ($tags as $tag=>$content) {
-            $collapsed .= '<meta '.$attr.'="'.$tag.'" content="'.str_replace('"', '', $content).'" />'."\n";
+        if ($tags) {
+            foreach ($tags as $tag=>$content) {
+                $collapsed .= '<meta '.$attr.'="'.$tag.'" content="'.str_replace('"', '', $content).'" />'."\n";
+            }
         }
 
         return $collapsed;

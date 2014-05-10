@@ -19,32 +19,23 @@ class index
 
     public function get_index()
     {
-        $my_campaigns = Models\Campaign::find()
-            ->where('campaigns.starts_at IS NULL OR campaigns.starts_at < NOW()')
-            ->where('campaigns.ends_at IS NULL OR campaigns.ends_at > NOW()')
-            ->join('campaigns_users ON (campaigns.campaignID = campaigns_users.campaignID)')
-            ->where('campaigns_users.userID = ?', Models\User::me()->id)
+        $current_groups = Models\Group::find()
+            ->where('groups.starts_at < NOW()')
+            ->where('groups.ends_at > NOW()')
             ->all();
 
-        $other_campaigns = Models\Campaign::find()
-            ->where('campaigns.starts_at IS NULL OR campaigns.starts_at < NOW()')
-            ->where('campaigns.ends_at IS NULL OR campaigns.ends_at > NOW()')
-            ->where('(SELECT COUNT(*) FROM campaigns_users WHERE campaigns_users.campaignID = campaigns.campaignID AND campaigns_users.userID = ?) = 0', Models\User::me()->id)
+        $archived_groups = Models\Group::find()
+            ->where('groups.ends_at < NOW()')
             ->all();
 
-        $archived_campaigns = Models\Campaign::find()
-            ->where('campaigns.ends_at < NOW()')
-            ->all();
-
-        $upcoming_campaigns = Models\Campaign::find()
-            ->where('campaigns.starts_at > NOW()')
+        $upcoming_groups = Models\Group::find()
+            ->where('groups.starts_at > NOW()')
             ->all();
 
         echo \WarRoom::$twig->render('campaigns/index.html.twig', [
-            'my_campaigns' => $my_campaigns,
-            'other_campaigns' => $other_campaigns,
-            'upcoming_campaigns' => $upcoming_campaigns,
-            'archived_campaigns' => $archived_campaigns
+            'current_groups' => $current_groups,
+            'archived_groups' => $archived_groups,
+            'upcoming_groups' => $upcoming_groups
         ]);
     }
 } 

@@ -57,7 +57,8 @@ section.content {
     input[type="datetime-local"],
     input[type="password"],
     input[type="search"],
-    input[type="number"] {
+    input[type="number"],
+    textarea {
         font: {
             family: $font;
             size: 1rem;
@@ -84,9 +85,22 @@ section.content {
             input[type="datetime-local"],
             input[type="password"],
             input[type="search"],
-            input[type="number"] {
+            input[type="number"],
+            textarea {
                 width: 100%;
             }
+        }
+    }
+
+    .message {
+        padding: 1rem;
+        border: 1px solid #000;
+        text-align: center;
+        h2 {
+            margin-top: 0.25rem;
+        }
+        span {
+            display: block;
         }
     }
 

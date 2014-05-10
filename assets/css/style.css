@@ -39,7 +39,8 @@ section.content {
   section.content input[type="datetime-local"],
   section.content input[type="password"],
   section.content input[type="search"],
-  section.content input[type="number"] {
+  section.content input[type="number"],
+  section.content textarea {
     font-family: "inconsolata", monospace;
     font-size: 1rem;
     padding: 0.3rem 0.2rem;
@@ -57,8 +58,17 @@ section.content {
     section.content form.crud input[type="datetime-local"],
     section.content form.crud input[type="password"],
     section.content form.crud input[type="search"],
-    section.content form.crud input[type="number"] {
+    section.content form.crud input[type="number"],
+    section.content form.crud textarea {
       width: 100%; }
+  section.content .message {
+    padding: 1rem;
+    border: 1px solid #000;
+    text-align: center; }
+    section.content .message h2 {
+      margin-top: 0.25rem; }
+    section.content .message span {
+      display: block; }
   section.content .mylinks tr:not(.new) td {
     padding: 0.3rem 0.5rem;
     text-align: center;

@@ -1,18 +1,27 @@
 {% extends "template.html.twig" %}
 {% block title %}{{ campaign.title }}{% endblock %}
 {% block content %}
+    <section class="message" {% if campaign.group.message == null or campaign.group.message == '' %}style="display: none"{% endif %}>
+        <h2>Campaign Message</h2>
+        <span>{{ campaign.group.message|raw|nl2br }}</span>
+    </section>
     {% if not display %}
+        <p>
+            Currently promoting:
+            <select id="promotionselector">
+                {% for gc in campaign.group.campaigns %}
+                    <option value="{{ gc.id }}"{% if gc.id == campaign.id %} selected{% endif %}>{{ gc.title }}</option>
+                {% endfor %}
+            </select>
+        </p>
         <section class="mine">
-            <h2>Campaign: {{ campaign.title }}</h2>
-            {% if not me.is_member(campaign) %}
+            {% if not me.is_member(campaign.group) %}
                 <section class="join">
                     <form method="post" action="/campaigns/view/join/{{ campaign.id }}">
                         <input type="submit" value="Join this Campaign!" />
                     </form>
                 </section>
-            {% endif %}
-
-            {% if me.is_member(campaign) %}
+            {% else %}
                 <section class="mylinks" id="mylinks">
                     <h2>My Links</h2>
                     <table>
@@ -48,11 +57,8 @@
     {% endif %}
 
     <section class="campaign {% if display %}display{% endif %}">
-        {% if display %}
-            <h2>Campaign: {{ campaign.title }}</h2>
-        {% endif %}
         <section class="leaderboard">
-            <h2>Leaderboard</h2>
+            <h2>{{ campaign.group.title }} Leaderboard</h2>
             <ol id="leaders">
                 {% for user in users %}
                     <li>
@@ -70,6 +76,8 @@
 
 {% endblock %}
 {% block javascript %}
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script type="application/javascript">
         $('body').ready(function(){
 
@@ -91,7 +99,7 @@
                     return false;
                 }
 
-                return localStorage['sounds_enabled'] === true.toString();
+                return localStorage['sounds_enabled'] !== false.toString();
             }
 
             $('.toggle_sounds a')
@@ -118,6 +126,11 @@
                     if (a[i] !== b[i]) return false;
                 }
                 return true;
+            }
+
+            var nl2br = function (str, is_xhtml) {
+                var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+                return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
             }
 
             var playSound = function(name)
@@ -179,12 +192,54 @@
                 }
             }
 
+            var previousMessage = '{{ campaign.group.message|escape('js') }}'
+            var setMessage = function(new_message)
+            {
+                if (new_message == null) {
+                    new_message = '';
+                }
+
+                var current_message_holder = $('section.message');
+                var current_message_elem = $('section.message span');
+                if (new_message !== previousMessage) {
+                    previousMessage = new_message;
+                    current_message_holder.stop();
+                    current_message_elem.html(nl2br(new_message));
+                    if (new_message == '') {
+                        current_message_holder.slideUp();
+                    } else {
+                        if (current_message_holder.css('display') == 'none') {
+                            current_message_holder.slideDown();
+                        }
+                        playSound("messageupdate");
+                        current_message_holder.css("background-color", "#FFFF9C")
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500);
+                    }
+                }
+            }
+
             setInterval(function(){
                 $.get('/campaigns/view/liveleaders/{{ campaign.id }}.json', function(data) {
                     setLeaders(data.leaderboard);
                     setMine(data.links);
+                    setMessage(data.message);
                 });
             }, 1000);
+
+            $('#promotionselector').on('change', function(){
+                $('body').fadeOut();
+                window.location = '/campaigns/view/'+$(this).val();
+            });
         });
     </script>
 {% endblock %}

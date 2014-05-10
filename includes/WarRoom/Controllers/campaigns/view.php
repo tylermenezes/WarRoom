@@ -37,7 +37,7 @@ class view
             $sound = true;
         }
 
-        echo \WarRoom::$twig->render('campaigns/view.html.twig', ['sound' => $sound, 'display' => $display, 'campaign' => $campaign, 'my_links' => $my_links, 'users' => Models\User::get_leaders($campaign)]);
+        echo \WarRoom::$twig->render('campaigns/view.html.twig', ['sound' => $sound, 'display' => $display, 'campaign' => $campaign, 'my_links' => $my_links, 'users' => Models\User::get_leaders($campaign->group)]);
     }
 
     public function get_liveleaders($id)
@@ -53,13 +53,13 @@ class view
                                ->where('campaignID = ?', $id)
                                ->all();
 
-        $users = Models\User::get_leaders($campaign);
+        $users = Models\User::get_leaders($campaign->group);
         $leaderboard = array_map(function($user) use($campaign) {
                 return [
                     'id' => $user->id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
-                    'clicks' => $user->get_clicks($campaign)
+                    'clicks' => $user->get_clicks($campaign->group)
                 ];
         }, iterator_to_array($users));
 
@@ -73,7 +73,8 @@ class view
 
         return [
             'leaderboard' => $leaderboard,
-            'links' => $links
+            'links' => $links,
+            'message' => $campaign->group->message
         ];
     }
 
@@ -85,13 +86,14 @@ class view
             throw new \CuteControllers\HttpError(401);
         }
 
-        if (!Models\User::me()->is_member($campaign)) {
+        if (!Models\User::me()->is_member($campaign->group)) {
             throw new \CuteControllers\HttpError(401);
         }
 
         new Models\Link([
             'userID' => Models\User::me()->id,
             'campaignID' => $id,
+            'groupID' => $campaign->group->id,
             'source_info' => $this->request->post('source_info')
         ]);
 
@@ -106,11 +108,7 @@ class view
             throw new \CuteControllers\HttpError(401);
         }
 
-        if (!Models\User::me()->in_bailiwick) {
-            throw new \CuteControllers\HttpError(403);
-        }
-
-        Models\User::me()->join($campaign);
+        Models\User::me()->join($campaign->group);
         $this->redirect('/campaigns/view/'.$id);
     }
 } 

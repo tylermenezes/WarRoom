@@ -12,7 +12,7 @@ use \WarRoom\Traits;
  *
  * @package     WarRoom\Controllers
  */
-class newc
+class newgroup
 {
     use \CuteControllers\Controller;
     use Traits\RequiresLogin;
@@ -20,17 +20,17 @@ class newc
 
     public function get_index()
     {
-        echo \WarRoom::$twig->render('campaigns/new.html.twig');
+        echo \WarRoom::$twig->render('campaigns/new_group.html.twig');
     }
 
     public function post_index()
     {
-        $campaign = new Models\Campaign([
-            'link' => $this->request->post('link'),
-            'groupID' => $this->request->get('group')
+        $group = new Models\Group([
+            'title' => $this->request->post('title'),
+            'starts_at' => strtotime($this->request->post('starts_at')),
+            'ends_at' => strtotime($this->request->post('ends_at'))
         ]);
-        $campaign->sync_og();
 
-        $this->redirect('/campaigns/view/'.$campaign->id);
+        $this->redirect('/campaigns');
     }
 } 

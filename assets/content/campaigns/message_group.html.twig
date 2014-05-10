@@ -1,0 +1,9 @@
+{% extends "template.html.twig" %}
+{% block title %}Campaigns{% endblock %}
+{% block content %}
+    <h1>Message {{ group.title }}</h1>
+    <form method="post" class="crud">
+        <textarea name="message" rows="10">{{ group.message }}</textarea>
+        <input type="submit" value="Send" />
+    </form>
+{% endblock %}
