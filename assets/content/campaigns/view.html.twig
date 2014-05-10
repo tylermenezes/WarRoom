@@ -2,7 +2,7 @@
 {% block title %}{{ campaign.title }}{% endblock %}
 {% block content %}
     <section class="message" {% if campaign.group.message == null or campaign.group.message == '' %}style="display: none"{% endif %}>
-        <h2>Campaign Message</h2>
+        <h2>Communication From The Admiral:</h2>
         <span>{{ campaign.group.message|raw|nl2br }}</span>
     </section>
     {% if not display %}
@@ -51,6 +51,14 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <h3>What's Happening?</h3>
+                    <p><em>Here's how it works:</em> "links" are just want they sound like
+                       &mdash; links. Each time someone clicks one of your links, they're redirected
+                       to the {{ campaign.title }} site and your "clicks" go up by one. (Your
+                       clicks are tracked across all promotion targets in this group.)</p>
+                    <p>Why can you create multiple links? You can create different links with
+                       different "tags" to see where your clicks are coming from!</p>
                 </section>
             {% endif %}
         </section>
@@ -62,7 +70,7 @@
             <ol id="leaders">
                 {% for user in users %}
                     <li>
-                        {{ user.first_name }} - {{ user.get_clicks(campaign) }}
+                        {{ user.first_name }} {{ user.last_name|slice(0,1) }}: {{ user.get_clicks(campaign.group) }} clicks
                     </li>
                 {% endfor %}
             </ol>
@@ -157,7 +165,8 @@
 
                 for(var i in new_leaders) {
                     var new_li = $('<li></li>');
-                    new_li.text(new_leaders[i].first_name + ' - ' + new_leaders[i].clicks);
+                    new_li.attr("id", 'leader_user_' + new_leaders[i].id);
+                    new_li.text(new_leaders[i].first_name+' '+new_leaders[i].last_name[0]+': ' + new_leaders[i].clicks + ' clicks');
                     elem.append(new_li);
                 }
 
@@ -167,11 +176,27 @@
                     && !arraysEqual(new_leaders_ids, previous_leaders_ids)
                     && new_leaders_ids.length === previous_leaders_ids.length) {
                     playSound("overtake"+Math.round((Math.random()*5)+1));
+
+                    for (var i in new_leaders_ids) {
+                        if (new_leaders_ids[i] != previous_leaders_ids[i]) {
+                            $('#leader_user_'+new_leaders_ids[i]).stop().css("background-color", "#EF5959")
+                                .animate({ backgroundColor: "#FFFFFF"}, 1800)
+                            $('#leader_user_'+previous_leaders_ids[i]).stop().css("background-color", "#EF5959")
+                                .animate({ backgroundColor: "#FFFFFF"}, 1800)
+                        }
+                    }
                 }
 
                 if (previous_leaders_ids !== null
-                    && new_leaders_ids.length !== previous_leaders_ids.length) {
+                    && new_leaders_ids.length > previous_leaders_ids.length) {
                     playSound("joined");
+
+                    for (var i in new_leaders_ids) {
+                        if ($.inArray(new_leaders_ids[i], previous_leaders_ids) == -1) {
+                            $('#leader_user_'+new_leaders_ids[i]).css("background-color", "#EF5959")
+                                .animate({ backgroundColor: "#FFFFFF"}, 1800)
+                        }
+                    }
                 }
 
                 previous_leaders_ids = new_leaders_ids;
@@ -188,7 +213,12 @@
             var setMine = function(new_links)
             {
                 for (var i in new_links) {
-                    $('#link-id-'+new_links[i].id+' .clicks').text(new_links[i].clicks);
+                    var elem = $('#link-id-'+new_links[i].id+' .clicks');
+                    if (elem.text() != new_links[i].clicks) {
+                        elem.text(new_links[i].clicks);
+                        $('#link-id-'+new_links[i].id+', #link-id-'+new_links[i].id+' input' ).css("background-color", "#FFFF9C")
+                            .animate({ backgroundColor: "#FFFFFF"}, 1800)
+                    }
                 }
             }
 
@@ -212,17 +242,19 @@
                             current_message_holder.slideDown();
                         }
                         playSound("messageupdate");
-                        current_message_holder.css("background-color", "#FFFF9C")
+                        current_message_holder.css("background-color", "#EF5959")
                             .animate({ backgroundColor: "#FFFFFF"}, 1500)
-                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
                             .animate({ backgroundColor: "#FFFFFF"}, 1500)
-                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
                             .animate({ backgroundColor: "#FFFFFF"}, 1500)
-                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
                             .animate({ backgroundColor: "#FFFFFF"}, 1500)
-                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
                             .animate({ backgroundColor: "#FFFFFF"}, 1500)
-                            .animate({ backgroundColor: "#FFFF9C"}, 500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
+                            .animate({ backgroundColor: "#FFFFFF"}, 1500)
+                            .animate({ backgroundColor: "#EF5959"}, 500)
                             .animate({ backgroundColor: "#FFFFFF"}, 1500);
                     }
                 }
@@ -234,7 +266,7 @@
                     setMine(data.links);
                     setMessage(data.message);
                 });
-            }, 1000);
+            }, 2000);
 
             $('#promotionselector').on('change', function(){
                 $('body').fadeOut();

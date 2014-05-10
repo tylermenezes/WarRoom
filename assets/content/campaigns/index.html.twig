@@ -35,7 +35,8 @@
 {% import _self as index %}
 {% block content %}
     {% if current_groups|length > 0 %}
-        <h1>My Running Campaigns</h1>
+        <h1>Running Campaigns</h1>
+        <p>Pick a website to start promoting!</p>
         {{ index.campaignlist(current_groups) }}
     {% endif %}
 
