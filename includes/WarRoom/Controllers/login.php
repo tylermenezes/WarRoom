@@ -24,7 +24,7 @@ class login
     {
         $oauth_url = "https://www.facebook.com/dialog/oauth?"
                     ."client_id=".\WarRoom::$config->facebook->public
-                    ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth', true)
+                    ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth?r='.rand(0,1000), true)
                     ."&scope=email";
         $this->redirect($oauth_url);
     }
@@ -55,7 +55,7 @@ class login
         $code = $this->request->get('code');
         $request_url = "https://graph.facebook.com/oauth/access_token?"
                        ."client_id=".\WarRoom::$config->facebook->public
-                       ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth', true)
+                       ."&redirect_uri=".\CuteControllers\Router::link('/login/oauth?r='.$this->request->get('r'), true)
                        ."&client_secret=".\WarRoom::$config->facebook->secret
                        ."&code=".$code;
         $response = [];
