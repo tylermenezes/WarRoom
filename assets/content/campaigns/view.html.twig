@@ -261,11 +261,14 @@
             }
 
             setInterval(function(){
-                $.get('/campaigns/view/liveleaders/{{ campaign.id }}.json', function(data) {
+                var xhr = $.get('/campaigns/view/liveleaders/{{ campaign.id }}.json', function(data) {
                     setLeaders(data.leaderboard);
                     setMine(data.links);
                     setMessage(data.message);
                 });
+                setTimeout(function(){
+                    xhr.abort();
+                }, 5000);
             }, 2000);
 
             $('#promotionselector').on('change', function(){
