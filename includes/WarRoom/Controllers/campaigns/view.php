@@ -30,6 +30,20 @@ class view
                         ->where('campaignID = ?', $id)
                         ->all();
 
+        if (Models\User::me()->is_member($campaign->group) && count($my_links) == 0) {
+            new Models\Link([
+                'userID' => Models\User::me()->id,
+                'campaignID' => $campaign->id,
+                'groupID' => $campaign->group->id,
+                'source_info' => 'General'
+            ]);
+
+            $my_links = Models\Link::find()
+                                   ->where('userID = ?', Models\User::me()->id)
+                                   ->where('campaignID = ?', $id)
+                                   ->all();
+        }
+
         $sound = $this->request->get('sound') !== null;
         $display = $this->request->get('display') !== null;
 

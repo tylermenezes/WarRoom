@@ -31,6 +31,6 @@ class newc
         ]);
         $campaign->sync_og();
 
-        $this->redirect('/campaigns/view/'.$campaign->id);
+        $this->redirect('/campaigns/new?group='.$this->request->get('group'));
     }
 } 
