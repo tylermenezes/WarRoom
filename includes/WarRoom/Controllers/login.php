@@ -29,6 +29,27 @@ class login
         $this->redirect($oauth_url);
     }
 
+    public function get_email()
+    {
+        echo \WarRoom::$twig->render('login_email.html.twig');
+    }
+
+    public function post_email()
+    {
+        try {
+            $user = Models\User::find()->where('email = ?', $this->request->post('email'))->one();
+        } catch (\TinyDb\NoRecordException $ex) {
+            $user = new Models\User([
+                'email' => $this->request->post('email'),
+                'first_name' => $this->request->post('first_name'),
+                'last_name' => $this->request->post('last_name')
+            ]);
+        }
+
+        $user->login();
+        $this->redirect('/campaigns');
+    }
+
     public function get_oauth()
     {
         $code = $this->request->get('code');
